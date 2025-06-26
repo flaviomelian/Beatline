@@ -11,7 +11,8 @@ const getAllTracks = async (request, response) => {
             }); //guardamos todos las tracks en una constante con findAll()
             return response.status(200).json(tracks); //devolvemos el codigo de OK y la respuesta en formato json
         }
-        return response.status(404); //devolvemos el codigo de OK y la respuesta en formato json
+        const tracks = await Track.findAll();
+        return response.status(200).json(tracks); //devolvemos el codigo de OK y la respuesta en formato json
     } catch (error) {
         return response.status(501).send(error); //en caso de error, devolemos el codigo de error y enviamos el mensaje de error
     }
