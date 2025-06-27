@@ -1,0 +1,19 @@
+div {
+    display: flex;
+    justify-content: center;
+    background-image: url('./assets/background.png');
+    background-repeat: repeat;
+}
+
+main {
+    background-color: #000000;
+    border-radius: 3%;
+    border: 5px solid #000000a3;
+    padding: 2%;
+    box-shadow: 0 0 100px 200px rgba(0, 0, 0, 0.629);
+}
+
+main:hover{
+    border: 3px double #ea01ff;
+    transition: ease-in-out 0.5s;
+}
