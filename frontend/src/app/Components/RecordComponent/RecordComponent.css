@@ -6,8 +6,10 @@
 }
 
 .tools {
+    display: flex;
     justify-content: space-evenly;
     width: 60%;
+    background: #00000000;
 }
 
 .record-btn {
@@ -27,4 +29,9 @@
 .record-btn:hover {
     border: 2px solid #ea01ff;
   transition: ease-in-out 0.5s;
+}
+
+.tracks{
+    display: flex;
+    flex-direction: column;
 }

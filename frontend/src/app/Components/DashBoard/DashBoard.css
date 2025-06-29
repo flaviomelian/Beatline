@@ -1,0 +1,11 @@
+.dashboard{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 50vh;
+    width: 20%;
+    margin: auto;
+    background: #00000000;
+    margin-top: 10%;
+    margin-bottom: 11%;
+}

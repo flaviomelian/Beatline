@@ -1,6 +1,7 @@
 "use client";
 import React, { useRef, useState } from "react";
 import "./RecordComponent.css";
+import Track from "../Track/Track";
 
 const RecordComponent: React.FC = () => {
   const [recording, setRecording] = useState(false);
@@ -17,6 +18,8 @@ const RecordComponent: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const [tracks, setTracks] = useState<{ name: string; url: string }[]>([]);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const draw = () => {
     if (!analyserRef.current || !canvasRef.current) return;
@@ -118,8 +121,37 @@ const RecordComponent: React.FC = () => {
     document.body.removeChild(a);
   };
 
+  const handleAddTrack = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const url = URL.createObjectURL(file);
+      setTracks((prev) => [...prev, { name: file.name, url }]);
+      // Limpia el input para poder volver a seleccionar el mismo archivo si se quiere
+      e.target.value = "";
+    }
+  };
+
   return (
     <div className="record">
+      <button
+        className="bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 px-6 rounded-2xl shadow-md transition"
+        onClick={handleAddTrack}
+        type="button"
+        style={{ marginBottom: "1%" }}
+      >
+        Añadir Pista a la grabación
+      </button>
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept="audio/*"
+        style={{ display: "none" }}
+        onChange={handleFileChange}
+      />
       <canvas
         ref={canvasRef}
         width={1000}
@@ -152,6 +184,12 @@ const RecordComponent: React.FC = () => {
           Guardar
         </button>
       </div>
+      <div className="tracks">
+        {tracks.map((track, idx) => (
+          <Track key={idx} name={track.name} url={track.url} />
+        ))}
+      </div>
+        
     </div>
   );
 };
