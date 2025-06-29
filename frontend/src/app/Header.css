@@ -1,0 +1,9 @@
+.header, .options {
+    display: flex;
+    justify-content: space-between;
+    background: linear-gradient(#0e0e0e 90%, #0000 10%);
+    position: sticky;
+    top: 0vh;
+    padding: 0.25%;
+    box-shadow: 0 8px 24px 0 rgba(0,0,0,0.35);
+}
