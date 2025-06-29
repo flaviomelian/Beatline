@@ -1,5 +1,23 @@
 .header{
     position: sticky;
     top: 0;
-    background: linear-gradient(to bottom, #000000 50%, #0000);
+    background: linear-gradient(to bottom, #000000 70%, #0000);
+    padding: 1% 5% 1% 5%;
+}
+
+.options {
+    margin-left: auto;
+    background: linear-gradient(to bottom, #000000 70%, #0000);
+    width: 15%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.in-header {
+    border-radius: 50%;
+    transition: ease-in-out 0.5s;
+}
+
+.in-header:hover {
+    box-shadow: 0 0 12px 4px #fff;
 }
