@@ -1,14 +1,16 @@
 import React, { useEffect, useRef } from "react";
-import Image from "next/image";
-import play from "../../assets/play-pause.png";
 import "./Track.css";
+import deleteImg from "../../assets/delete.png";
+import Image from "next/image";
 
 interface TrackProps {
   name: string;
   url: string;
+  audioRef?: (el: HTMLAudioElement | null) => void;
+  deleteAudio: () => void 
 }
 
-const Track: React.FC<TrackProps> = ({ name, url }) => {
+const Track: React.FC<TrackProps> = ({ name, url, audioRef, deleteAudio }) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
   useEffect(() => {
@@ -61,7 +63,15 @@ const Track: React.FC<TrackProps> = ({ name, url }) => {
         height={60}
         style={{ width: "100%", background: "#222", borderRadius: "6px" }}
       />
-      <audio controls src={url} style={{ width: "100%", background: 'black'}} />
+      <audio
+        controls
+        src={url}
+        style={{ width: "5%", background: "black" }}
+        ref={audioRef}
+      />
+      <button onClick={deleteAudio}>
+        <Image className="" src={deleteImg} alt="delete" />
+      </button>
     </div>
   );
 };

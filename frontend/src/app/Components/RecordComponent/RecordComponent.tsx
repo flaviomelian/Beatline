@@ -18,6 +18,7 @@ const RecordComponent: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const audioRefs = useRef<Array<HTMLAudioElement | null>>([]);
   const [tracks, setTracks] = useState<{ name: string; url: string }[]>([]);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
@@ -135,6 +136,21 @@ const RecordComponent: React.FC = () => {
     }
   };
 
+  const playAllTracks = () => {
+    console.log(audioRefs);
+    audioRefs.current.forEach((audio) => {
+      if (audio) {
+        audio.currentTime = 0;
+        audio.play();
+      }
+    });
+  };
+
+  const deleteAudio = (index: number) => {
+    setTracks((prev) => prev.filter((_, i) => i !== index));
+    audioRefs.current.splice(index, 1);
+  }
+
   return (
     <div className="record">
       <button
@@ -170,9 +186,10 @@ const RecordComponent: React.FC = () => {
           {recording ? "Detener grabación" : "Grabar"}
         </button>
         <button
-          onClick={playAudio}
-          disabled={!audioUrl}
           className="bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 px-6 rounded-2xl shadow-md transition"
+          onClick={playAllTracks}
+          type="button"
+          disabled={tracks.length === 0}
         >
           Reproducir
         </button>
@@ -185,11 +202,18 @@ const RecordComponent: React.FC = () => {
         </button>
       </div>
       <div className="tracks">
-        {tracks.map((track, idx) => (
-          <Track key={idx} name={track.name} url={track.url} />
-        ))}
+        <div className="tracks">
+          {tracks.map((track, idx) => (
+            <Track
+              key={idx}
+              name={track.name}
+              url={track.url}
+              audioRef={(el) => (audioRefs.current[idx] = el)}
+              deleteAudio={() => deleteAudio(idx)}
+            />
+          ))}
+        </div>
       </div>
-        
     </div>
   );
 };
