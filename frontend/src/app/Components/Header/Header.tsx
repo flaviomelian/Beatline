@@ -1,10 +1,10 @@
 import React from "react";
 import Image from "next/image";
 import "./Header.css";
-import home from "./assets/home.png";
-import audioFile from "./assets/audio_file.png";
-import mic from "./assets/mic.png";
-import account from "./assets/account.png";
+import home from "../../assets/home.png";
+import audioFile from "../../assets/audio_file.png";
+import mic from "../../assets/mic.png";
+import account from "../../assets/account.png";
 import Link from "next/link";
 
 const Header = () => {

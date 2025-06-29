@@ -1,9 +1,10 @@
 import React from 'react'
+import RecordComponent from '../Components/RecordComponent/RecordComponent'
 
 const Record = () => {
   return (
     <div>
-      RECORD
+      <RecordComponent/>
     </div>
   )
 }
