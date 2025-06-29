@@ -10,6 +10,7 @@ main {
     border-radius: 3%;
     border: 5px solid #000000a3;
     padding: 2%;
+    margin-top: 12%;
     box-shadow: 0 0 100px 200px rgba(0, 0, 0, 0.629);
 }
 
