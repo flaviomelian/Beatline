@@ -1,0 +1,39 @@
+.container {
+  width: 20%;
+  margin: 0 auto;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  top: 20vh;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  padding: 2rem;
+}
+
+.header {
+  font-size: 1.5rem;
+  margin: auto;
+  width: 63%;
+}
+
+.form label {
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+  font-weight: bold;
+}
+
+.form input {
+  padding: 0.5rem;
+  font-size: 1rem;
+  margin-top: 0.5rem;
+}
+
+.create-project{
+    margin-top: 5%;
+}

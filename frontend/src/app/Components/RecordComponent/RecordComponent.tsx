@@ -149,18 +149,23 @@ const RecordComponent: React.FC = () => {
   const deleteAudio = (index: number) => {
     setTracks((prev) => prev.filter((_, i) => i !== index));
     audioRefs.current.splice(index, 1);
-  }
+  };
 
   return (
     <div className="record">
-      <button
-        className="bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 px-6 rounded-2xl shadow-md transition"
-        onClick={handleAddTrack}
-        type="button"
-        style={{ marginBottom: "1%" }}
-      >
-        Añadir Pista a la grabación
-      </button>
+      <div className="other-tools">
+        <button
+          className="bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 px-6 rounded-2xl shadow-md transition"
+          onClick={handleAddTrack}
+          type="button"
+          style={{ marginBottom: "1%" }}
+        >
+          Añadir Pista a la grabación
+        </button>
+        <select>
+          <option value="default">Seleccionar proyecto</option>
+        </select>
+      </div>
       <input
         ref={fileInputRef}
         type="file"

@@ -20,8 +20,8 @@ const Header = () => {
         <Link href="/record">
           <Image className="in-header" src={mic} alt="Mic" />
         </Link>
-        <Link href="/account">
-          <Image className="in-header" src={account} alt="Account" />
+        <Link href="/login">
+          <Image className="in-header" src={account} alt="Login" />
         </Link>
       </div>
     </div>

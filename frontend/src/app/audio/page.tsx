@@ -1,10 +1,10 @@
 import React from 'react'
-import CreateProject from '../Components/DashBoard/DashBoard';
+import DashBoard from '../Components/DashBoard/DashBoard';
 
 const Audio = () => {
   return (
     <div>
-      <CreateProject/>
+      <DashBoard/>
     </div>
   )
 }
