@@ -8,6 +8,10 @@ const Session = connection.define(
             type: DataTypes.STRING,
             allowNull: false,
         },
+        style: {
+            type: DataTypes.STRING,
+            allowNull: false,
+        },
         bpm: {
             type: DataTypes.INTEGER,
         },

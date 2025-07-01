@@ -38,6 +38,7 @@ const createSession = async (request, response) => {
         const session = await Session.create(request.body); //guardamos la Session en una constante con create() y le pasamos el body de la request (la info del Session)
         return response.status(200).json(session); //devolvemos el codigo de OK y la respuesta en formato json
     } catch (error) {
+        console.log(error)
         return response.status(501).send(error); //en caso de error, devolemos el codigo de error y enviamos el mensaje de error
     }
 };
