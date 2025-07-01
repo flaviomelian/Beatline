@@ -1,10 +1,11 @@
 import React from 'react'
 import './myProjects.css'
+import Projects from '../Components/Projects/Projects'
 
 const page = () => {
   return (
     <div>
-      <h1 className='header-my-projects'>Mis proyectos</h1>
+      <Projects/>
     </div>
   )
 }
