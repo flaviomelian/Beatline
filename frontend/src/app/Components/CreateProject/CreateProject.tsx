@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import styles from "./CreateProject.module.css";
-import { createSession } from '../../Services/sessionService'
+import { createSession } from "../../Services/sessionService";
 
 const defaultBpms: Record<string, number> = {
   rap: 90,
@@ -23,9 +23,10 @@ const CreateProject = () => {
   const [estilo, setEstilo] = useState("");
 
   const handleEstiloChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    console.log("ñdsalknjfslñakdnfmslkdnvclsdknfslkdnf",e.target.value)
+    console.log("ñdsalknjfslñakdnfmslkdnvclsdknfslkdnf", e.target.value);
     setEstilo(e.target.value);
-    if (defaultBpms[e.target.value]) setBpm(defaultBpms[e.target.value].toString());
+    if (defaultBpms[e.target.value])
+      setBpm(defaultBpms[e.target.value].toString());
     else setBpm("");
   };
 
@@ -35,11 +36,11 @@ const CreateProject = () => {
     const newSession = {
       title,
       bpm: bpm ? parseInt(bpm) : null,
-      style: estilo, 
-      userId: null
+      style: estilo,
+      userId: null,
     };
 
-    await createSession(newSession)
+    await createSession(newSession);
   };
 
   return (
@@ -47,28 +48,30 @@ const CreateProject = () => {
       <main className={styles.main}>
         <h1 className={styles.header}>Crear Proyecto</h1>
         <form onSubmit={handleSubmit} className={styles.form}>
-          <label htmlFor="title">Título del Proyecto:</label>
-          <input
-            type="text"
-            id="title"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            required
-          />
+          <div className={styles.inputs}>
+            <label htmlFor="title">Título del Proyecto:</label>
+            <input
+              type="text"
+              id="title"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              required
+            />
 
-          <select id="estilo" value={estilo} onChange={handleEstiloChange}>
-            <option value="">-- Elige un estilo --</option>
-            <option value="rap">Rap</option>
-            <option value="trap">Trap</option>
-            <option value="pop">Pop</option>
-            <option value="rock">Rock</option>
-            <option value="reggaeton">Reggaetón</option>
-            <option value="house">House</option>
-            <option value="lofi">Lo-fi</option>
-            <option value="drumandbass">Drum and Bass</option>
-            <option value="dubstep">Dubstep</option>
-            <option value="balada">Balada / R&B</option>
-          </select>
+            <select id={styles.estilo} value={estilo} onChange={handleEstiloChange}>
+              <option value="">-- Elige un estilo --</option>
+              <option value="rap">Rap</option>
+              <option value="trap">Trap</option>
+              <option value="pop">Pop</option>
+              <option value="rock">Rock</option>
+              <option value="reggaeton">Reggaetón</option>
+              <option value="house">House</option>
+              <option value="lofi">Lo-fi</option>
+              <option value="drumandbass">Drum and Bass</option>
+              <option value="dubstep">Dubstep</option>
+              <option value="balada">Balada / R&B</option>
+            </select>
+          </div>
 
           <button
             className={`${styles.button} bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 px-6 rounded-2xl shadow-md transition`}
