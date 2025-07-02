@@ -1,11 +1,11 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { getAllSessions } from "@/app/Services/sessionService";
+import { deleteSession, getAllSessions } from "@/app/Services/sessionService";
 import styles from "./Projects.module.css";
-import edit from './../../assets/edit.png'
-import trash from './../../assets/delete.png'
-import Image from 'next/image';
+import edit from "./../../assets/edit.png";
+import trash from "./../../assets/delete.png";
+import Image from "next/image";
 
 interface Project {
   id: number;
@@ -27,12 +27,21 @@ const Projects = () => {
     fetchProjects();
   }, []);
 
+  const handleDelete = async (id: number) => {
+    await deleteSession(id);
+    setProjects((prev) => prev.filter((p: Project) => p.id !== id));
+  };
+
   return (
     <>
       <div className={styles.pageProjects}>
         <h1 className={styles.headerProjects}>Proyectos</h1>
-        <button className="bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 px-6 rounded-2xl shadow-md transition"
-            onClick={() => router.push("/CreateProject")}>Añadir Proyecto</button>
+        <button
+          className="bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 px-6 rounded-2xl shadow-md transition"
+          onClick={() => router.push("/CreateProject")}
+        >
+          Añadir Proyecto
+        </button>
         <table className={styles.tableProjects}>
           <thead>
             <tr>
@@ -51,12 +60,22 @@ const Projects = () => {
                 <td>{project.style.toUpperCase()}</td>
                 <td>{project.bpm}</td>
                 <td className={styles.projectOptions}>
-                    <button>
-                      <Image src={edit} alt="Editar proyecto" width={24} height={24} />
-                    </button>
-                    <button>
-                      <Image src={trash} alt="Eliminar proyecto" width={24} height={24} />
-                    </button>
+                  <button onClick={() => router.push(`/CreateProject?id=${project.id}`)}>
+                    <Image
+                      src={edit}
+                      alt="Editar proyecto"
+                      width={24}
+                      height={24}
+                    />
+                  </button>
+                  <button onClick={() => handleDelete(project.id)}>
+                    <Image
+                      src={trash}
+                      alt="Eliminar proyecto"
+                      width={24}
+                      height={24}
+                    />
+                  </button>
                 </td>
               </tr>
             ))}

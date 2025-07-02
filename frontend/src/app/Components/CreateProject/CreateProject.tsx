@@ -1,8 +1,9 @@
 "use client";
-
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styles from "./CreateProject.module.css";
-import { createSession } from "../../Services/sessionService";
+import { createSession, getSession, updateSession } from "../../Services/sessionService";
+import { useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 
 const defaultBpms: Record<string, number> = {
   rap: 90,
@@ -21,9 +22,25 @@ const CreateProject = () => {
   const [title, setTitle] = useState("");
   const [bpm, setBpm] = useState("");
   const [estilo, setEstilo] = useState("");
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const id = searchParams.get("id");
+
+  useEffect(() => {
+    const fetchProject = async () => {
+      if (id) {
+        const { data } = await getSession(id);
+        if (data) {
+          setTitle(data.title || "");
+          setBpm(data.bpm ? data.bpm.toString() : "");
+          setEstilo(data.style || "");
+        }
+      }
+    };
+    fetchProject();
+  }, [id]);
 
   const handleEstiloChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    console.log("ñdsalknjfslñakdnfmslkdnvclsdknfslkdnf", e.target.value);
     setEstilo(e.target.value);
     if (defaultBpms[e.target.value])
       setBpm(defaultBpms[e.target.value].toString());
@@ -40,7 +57,9 @@ const CreateProject = () => {
       userId: null,
     };
 
-    await createSession(newSession);
+    if (id)  await updateSession(id, newSession);
+    else await createSession(newSession);
+    router.push("/MyProjects");
   };
 
   return (
@@ -58,7 +77,11 @@ const CreateProject = () => {
               required
             />
 
-            <select id={styles.estilo} value={estilo} onChange={handleEstiloChange}>
+            <select
+              id={styles.estilo}
+              value={estilo}
+              onChange={handleEstiloChange}
+            >
               <option value="">-- Elige un estilo --</option>
               <option value="rap">Rap</option>
               <option value="trap">Trap</option>
@@ -77,7 +100,7 @@ const CreateProject = () => {
             className={`${styles.button} bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 px-6 rounded-2xl shadow-md transition`}
             type="submit"
           >
-            Crear
+            {id ? "Editar" : "Crear"}
           </button>
         </form>
       </main>
