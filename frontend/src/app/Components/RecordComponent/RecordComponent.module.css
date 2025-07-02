@@ -5,7 +5,7 @@
   align-items: center;
 }
 
-.other-tools {
+.otherTools {
   display: flex;
   flex-direction: column;
   justify-content: space-around;
@@ -20,7 +20,7 @@
   background: #00000000;
 }
 
-.record-btn {
+.recordBtn {
   color: #fff;
   border: none;
   border-radius: 8px;
@@ -30,11 +30,11 @@
   background: #222;
 }
 
-.record-btn.recording {
+.recordBtn.recording {
   background: #ea01ff;
 }
 
-.record-btn:hover {
+.recordBtn:hover {
   border: 2px solid #ea01ff;
   transition: ease-in-out 0.5s;
 }
@@ -42,4 +42,10 @@
 .tracks {
   display: flex;
   flex-direction: column;
+}
+
+#estilo{
+  margin-bottom: 5%;
+  background-color: black;
+  color: white;
 }

@@ -14,13 +14,13 @@ const Header = () => {
         <Image className="in-header" src={home} alt="Home" />
       </Link>
       <div className="options">
-        <Link href="/audio">
+        <Link href="/Audio">
           <Image className="in-header" src={audioFile} alt="Audio" />
         </Link>
-        <Link href="/record">
+        <Link href="/Record">
           <Image className="in-header" src={mic} alt="Mic" />
         </Link>
-        <Link href="/login">
+        <Link href="/Login">
           <Image className="in-header" src={account} alt="Login" />
         </Link>
       </div>

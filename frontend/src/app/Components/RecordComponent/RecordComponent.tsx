@@ -1,7 +1,15 @@
 "use client";
-import React, { useRef, useState } from "react";
-import "./RecordComponent.css";
+import React, { useEffect, useRef, useState } from "react";
+import styles from "./RecordComponent.module.css";
 import Track from "../Track/Track";
+import { getAllSessions } from "@/app/Services/sessionService";
+
+interface Project {
+  id: number;
+  title: string;
+  style: string;
+  bpm: number;
+}
 
 const RecordComponent: React.FC = () => {
   const [recording, setRecording] = useState(false);
@@ -21,6 +29,16 @@ const RecordComponent: React.FC = () => {
   const audioRefs = useRef<Array<HTMLAudioElement | null>>([]);
   const [tracks, setTracks] = useState<{ name: string; url: string }[]>([]);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const [projects, setProjects] = useState([]);
+
+  useEffect(() => {
+    const fecthSessions = async () => {
+      const { data } = await getAllSessions();
+      setProjects(data);
+    };
+
+    fecthSessions();
+  }, []);
 
   const draw = () => {
     if (!analyserRef.current || !canvasRef.current) return;
@@ -152,8 +170,8 @@ const RecordComponent: React.FC = () => {
   };
 
   return (
-    <div className="record">
-      <div className="other-tools">
+    <div className={styles.record}>
+      <div className={styles.otherTools}>
         <button
           className="bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 px-6 rounded-2xl shadow-md transition"
           onClick={handleAddTrack}
@@ -162,8 +180,15 @@ const RecordComponent: React.FC = () => {
         >
           Añadir Pista a la grabación
         </button>
-        <select>
+        <select id={styles.estilo}>
           <option value="default">Seleccionar proyecto</option>
+          {projects.map((project: Project, index) => {
+            return (
+              <option key={index} value={project.title}>
+                {project.title}
+              </option>
+            );
+          })}
         </select>
       </div>
       <input
@@ -183,7 +208,7 @@ const RecordComponent: React.FC = () => {
           marginBottom: "16px",
         }}
       />
-      <div className="tools">
+      <div className={styles.tools}>
         <button
           onClick={recording ? stopRecording : startRecording}
           className="bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 px-6 rounded-2xl shadow-md transition"
@@ -207,17 +232,15 @@ const RecordComponent: React.FC = () => {
         </button>
       </div>
       <div className="tracks">
-        <div className="tracks">
-          {tracks.map((track, idx) => (
-            <Track
-              key={idx}
-              name={track.name}
-              url={track.url}
-              audioRef={(el) => (audioRefs.current[idx] = el)}
-              deleteAudio={() => deleteAudio(idx)}
-            />
-          ))}
-        </div>
+        {tracks.map((track, idx) => (
+          <Track
+            key={idx}
+            name={track.name}
+            url={track.url}
+            audioRef={(el) => (audioRefs.current[idx] = el)}
+            deleteAudio={() => deleteAudio(idx)}
+          />
+        ))}
       </div>
     </div>
   );
