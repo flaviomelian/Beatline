@@ -49,3 +49,10 @@
   background-color: black;
   color: white;
 }
+
+.save {
+  position: relative;
+  top: 3vh;
+  margin: auto;
+  width: 100%;
+}

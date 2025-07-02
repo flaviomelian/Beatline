@@ -3,6 +3,7 @@ import React, { useEffect, useRef, useState } from "react";
 import styles from "./RecordComponent.module.css";
 import Track from "../Track/Track";
 import { getAllSessions } from "@/app/Services/sessionService";
+import toWav from "audiobuffer-to-wav";
 
 interface Project {
   id: number;
@@ -39,6 +40,42 @@ const RecordComponent: React.FC = () => {
 
     fecthSessions();
   }, []);
+
+  const exportAllTracks = async () => {
+    // Carga todos los audios y decodifícalos
+    const audioCtx = new (window.AudioContext)();
+    const buffers = await Promise.all(
+      tracks.map(async (track) => {
+        const response = await fetch(track.url);
+        const arrayBuffer = await response.arrayBuffer();
+        return await audioCtx.decodeAudioData(arrayBuffer);
+      })
+    );
+
+    // Mezcla los buffers (asume que todos tienen la misma duración y sample rate)
+    const length = Math.max(...buffers.map((b) => b.length));
+    const sampleRate = audioCtx.sampleRate;
+    const output = audioCtx.createBuffer(1, length, sampleRate);
+
+    buffers.forEach((buffer) => {
+      const channel = buffer.getChannelData(0);
+      const outputChannel = output.getChannelData(0);
+      for (let i = 0; i < channel.length; i++) {
+        outputChannel[i] += channel[i] / buffers.length; // mezcla simple
+      }
+    });
+
+    // Convierte a WAV y descarga
+    const wav = toWav(output);
+    const blob = new Blob([wav], { type: "audio/wav" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "mixdown.wav";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  };
 
   const draw = () => {
     if (!analyserRef.current || !canvasRef.current) return;
@@ -241,6 +278,12 @@ const RecordComponent: React.FC = () => {
             deleteAudio={() => deleteAudio(idx)}
           />
         ))}
+        {tracks.length > 0 ?(<button
+          className={`${styles.save} bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 px-6 rounded-2xl shadow-md transition`}
+          onClick={exportAllTracks}
+        >
+          Guardar Audio Completo
+        </button>) : (<></>)}
       </div>
     </div>
   );
