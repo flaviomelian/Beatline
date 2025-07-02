@@ -1,11 +1,10 @@
-"use client"
+"use client";
 import React, { useState } from "react";
+import * as Tone from "tone";
 
 // Ejemplo de librería de samples (puedes cargar más dinámicamente)
 const sampleLibrary = [
-  { name: "Kick", url: "/samples/kick.wav" },
-  { name: "Snare", url: "/samples/snare.wav" },
-  { name: "HiHat", url: "/samples/hihat.wav" },
+  { name: "Kick", url: "/samples/mixdown (1).wav" },
   // Añade más samples aquí
 ];
 
@@ -15,6 +14,12 @@ const BeatProducer = () => {
   const playSample = async (url: string) => {
     const audio = new Audio(url);
     audio.play();
+  };
+
+  const playNote = async () => {
+    await Tone.start(); // Necesario por políticas del navegador
+    const synth = new Tone.Synth().toDestination();
+    synth.triggerAttackRelease("C4", "8n");
   };
 
   return (
@@ -29,6 +34,7 @@ const BeatProducer = () => {
                 onClick={() => {
                   setSelectedSample(sample.name);
                   playSample(sample.url);
+                  playNote()
                 }}
               >
                 {sample.name}
