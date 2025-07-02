@@ -1,4 +1,5 @@
 const Audio = require("../models/audio.model"); //Importar el modelo del audio
+const Session = require("../models/session.model"); //Importar el modelo del audio
 
 const getAllAudios = async (request, response) => {
     //Funcion que nos devuelve todas las filas de la tabla audios
@@ -35,8 +36,22 @@ const getAudio = async (request, response) => {
 const createAudio = async (request, response) => {
     //Funcion que nos crea un audio
     try {
-        const audio = await Audio.create(request.body); //guardamos la audio en una constante con create() y le pasamos el body de la request (la info del audio)
-        return response.status(200).json(audio); //devolvemos el codigo de OK y la respuesta en formato json
+        const { sessionId, trackId, ...audioData } = request.body;
+        const audio = await Audio.create(audioData);
+
+        // Asociar a sesión
+        if (sessionId) {
+            const session = await Session.findByPk(sessionId);
+            if (session) await session.addAudio(audio);
+        }
+
+        // Asociar a track (tabla intermedia)
+        if (trackId) {
+            const track = await Track.findByPk(trackId);
+            if (track) await audio.addTrack(track);
+        }
+
+        return response.status(200).json(audio);
     } catch (error) {
         return response.status(501).send(error); //en caso de error, devolemos el codigo de error y enviamos el mensaje de error
     }

@@ -1,8 +1,9 @@
 import api from "./index";
 
 export const createAudio = (audio) => {
-    const res = api.post("/audio/", audio)
-    return res.status;
+    const res  = api.post("/audio/", audio)
+    console.log("res", res)
+    return res;
 }
 
 export const getAllAudiosFromSession = () => {

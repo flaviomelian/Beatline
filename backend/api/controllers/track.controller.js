@@ -1,4 +1,5 @@
 const Track = require("../models/track.model"); //Importar el modelo del Track
+const Session = require("../models/session.model");
 
 const getAllTracks = async (request, response) => {
     //Funcion que nos devuelve todas las filas de la tabla Tracks
@@ -35,8 +36,22 @@ const getTrack = async (request, response) => {
 const createTrack = async (request, response) => {
     //Funcion que nos crea un Track
     try {
-        const track = await Track.create(request.body); //guardamos la Track en una constante con create() y le pasamos el body de la request (la info del Track)
-        return response.status(200).json(track); //devolvemos el codigo de OK y la respuesta en formato json
+        const { sessionId, audioId, ...trackData } = req.body;
+        const track = await Track.create(trackData);
+
+        // Asociar a sesión
+        if (sessionId) {
+            const session = await Session.findByPk(sessionId);
+            if (session) await session.addTrack(track);
+        }
+
+        // Asociar a audio (tabla intermedia)
+        if (audioId) {
+            const audio = await Audio.findByPk(audioId);
+            if (audio) await track.addAudio(audio);
+        }
+
+        return res.status(200).json(track);
     } catch (error) {
         return response.status(501).send(error); //en caso de error, devolemos el codigo de error y enviamos el mensaje de error
     }

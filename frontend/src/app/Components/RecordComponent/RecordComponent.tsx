@@ -75,12 +75,15 @@ const RecordComponent: React.FC = () => {
     const url = URL.createObjectURL(blob);
 
     // 2. Guarda el audio mezclado en la base de datos
-    await createAudio({
+    console.log("prevvvvvvv")
+    const audio = await createAudio({
       url, // o puedes subir el blob a tu backend y guardar la URL real
       name: "mixdown.wav",
       projectId: currentProjectID,
       isMixdown: true,
     });
+
+    console.log("audioResponse", audio)
 
     // 3. Guarda cada track individual en la base de datos
     for (const track of tracks) {
@@ -88,6 +91,7 @@ const RecordComponent: React.FC = () => {
         name: track.name,
         color: track.color || null,
         projectId: currentProjectID,
+        audioId: audio.data.id
       });
     }
 
