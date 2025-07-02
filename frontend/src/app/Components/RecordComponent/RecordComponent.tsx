@@ -3,6 +3,8 @@ import React, { useEffect, useRef, useState } from "react";
 import styles from "./RecordComponent.module.css";
 import Track from "../Track/Track";
 import { getAllSessions } from "@/app/Services/sessionService";
+import { createTrack } from "@/app/Services/tracksService";
+import { createAudio } from "@/app/Services/audioService";
 import toWav from "audiobuffer-to-wav";
 
 interface Project {
@@ -28,9 +30,12 @@ const RecordComponent: React.FC = () => {
   const streamRef = useRef<MediaStream | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const audioRefs = useRef<Array<HTMLAudioElement | null>>([]);
-  const [tracks, setTracks] = useState<{ name: string; url: string }[]>([]);
+  const [tracks, setTracks] = useState<{
+    color: null; name: string; url: string 
+}[]>([]);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [projects, setProjects] = useState([]);
+  const [currentProjectID, setCurrentProjectID] = useState(0);
 
   useEffect(() => {
     const fecthSessions = async () => {
@@ -43,7 +48,7 @@ const RecordComponent: React.FC = () => {
 
   const exportAllTracks = async () => {
     // Carga todos los audios y decodifícalos
-    const audioCtx = new (window.AudioContext)();
+    const audioCtx = new window.AudioContext();
     const buffers = await Promise.all(
       tracks.map(async (track) => {
         const response = await fetch(track.url);
@@ -52,7 +57,6 @@ const RecordComponent: React.FC = () => {
       })
     );
 
-    // Mezcla los buffers (asume que todos tienen la misma duración y sample rate)
     const length = Math.max(...buffers.map((b) => b.length));
     const sampleRate = audioCtx.sampleRate;
     const output = audioCtx.createBuffer(1, length, sampleRate);
@@ -61,7 +65,7 @@ const RecordComponent: React.FC = () => {
       const channel = buffer.getChannelData(0);
       const outputChannel = output.getChannelData(0);
       for (let i = 0; i < channel.length; i++) {
-        outputChannel[i] += channel[i] / buffers.length; // mezcla simple
+        outputChannel[i] += channel[i] / buffers.length;
       }
     });
 
@@ -69,6 +73,25 @@ const RecordComponent: React.FC = () => {
     const wav = toWav(output);
     const blob = new Blob([wav], { type: "audio/wav" });
     const url = URL.createObjectURL(blob);
+
+    // 2. Guarda el audio mezclado en la base de datos
+    await createAudio({
+      url, // o puedes subir el blob a tu backend y guardar la URL real
+      name: "mixdown.wav",
+      projectId: currentProjectID,
+      isMixdown: true,
+    });
+
+    // 3. Guarda cada track individual en la base de datos
+    for (const track of tracks) {
+      await createTrack({
+        name: track.name,
+        color: track.color || null,
+        projectId: currentProjectID,
+      });
+    }
+
+    // 4. Descarga el archivo para el usuario
     const a = document.createElement("a");
     a.href = url;
     a.download = "mixdown.wav";
@@ -217,11 +240,15 @@ const RecordComponent: React.FC = () => {
         >
           Añadir Pista a la grabación
         </button>
-        <select id={styles.estilo}>
+        <select
+          id={styles.estilo}
+          value={currentProjectID ?? "default"}
+          onChange={(e) => setCurrentProjectID(Number(e.target.value))}
+        >
           <option value="default">Seleccionar proyecto</option>
           {projects.map((project: Project, index) => {
             return (
-              <option key={index} value={project.title}>
+              <option key={index} value={project.id}>
                 {project.title}
               </option>
             );
@@ -278,12 +305,16 @@ const RecordComponent: React.FC = () => {
             deleteAudio={() => deleteAudio(idx)}
           />
         ))}
-        {tracks.length > 0 ?(<button
-          className={`${styles.save} bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 px-6 rounded-2xl shadow-md transition`}
-          onClick={exportAllTracks}
-        >
-          Guardar Audio Completo
-        </button>) : (<></>)}
+        {tracks.length > 0 ? (
+          <button
+            className={`${styles.save} bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 px-6 rounded-2xl shadow-md transition`}
+            onClick={exportAllTracks}
+          >
+            Guardar Audio Completo
+          </button>
+        ) : (
+          <></>
+        )}
       </div>
     </div>
   );

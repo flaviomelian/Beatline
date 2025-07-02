@@ -1,7 +1,7 @@
 import api from "./index";
 
-export const createTrack = (project) => {
-    const res = api.post("/track/", project)
+export const createTrack = (track) => {
+    const res = api.post("/track/", track)
     return res.status;
 }
 
